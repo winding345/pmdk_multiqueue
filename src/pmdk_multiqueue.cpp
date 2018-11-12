@@ -1,26 +1,8 @@
 #include "pmdk_multiqueue.h"
 
 pmem_multiqueue::pmem_multiqueue(pool_base &pop,int multi_num,int queue_len,int default_level)
+:multi_num(multi_num),queue_len(queue_len),default_level(default_level)
 {
-//    for(int i = 0;i < multi_num;++i)
-//    {
-//        pmem_queue* q = new pmem_queue(queue_len);
-//        mq.push_back(q);
-//        hot_range.push_back(HOT_LEVEL);
-//    }
-//    history_queue = new pmem_queue(queue_len);
-    std::cout<<this->default_level<<std::endl;
-    std::cout<<default_level<<std::endl;
-    if(this->default_level != -1)
-    {
-        //
-        return;
-    }
-    this->multi_num = multi_num;
-    this->queue_len = queue_len;
-    this->default_level = default_level;
-    std::cout<<this->default_level<<std::endl;
-    std::cout<<default_level<<std::endl;
     transaction::run(pop, [&]
     {
         mq = make_persistent<persistent_ptr<pmem_queue>[]>(multi_num);
