@@ -23,5 +23,9 @@ int main(int argc,char *argv[])
     {
         if(r->mq == nullptr)
             r->mq = make_persistent<pmem_multiqueue>(pop,1,2,3);
+        else
+        {
+            ;
+        }
     });
 }

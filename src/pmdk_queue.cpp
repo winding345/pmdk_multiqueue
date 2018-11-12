@@ -51,10 +51,10 @@ int pmem_queue::update_node(pool_base &pop,uint64_t key)
         }
         temp = temp->next;
     }
-    if(temp == NULL)
+    if(temp == nullptr)
         return 0;
     tail->next = temp;
-    temp->next = NULL;
+    temp->next = nullptr;
     temp->prev = tail;
     tail = temp;
     return 1;
@@ -71,7 +71,7 @@ int pmem_queue::push(pool_base &pool,uint64_t key,char* value)
         else
         {
             if(queue_size == capacity)
-                delete_persistent<pmem_entry>(pop(pool));
+                delete(pop(pool));
             tail->next = make_persistent<pmem_entry>();
             tail->next->prev = tail;
             tail->next->next = nullptr;
@@ -90,7 +90,7 @@ persistent_ptr<pmem_entry> pmem_queue::pop(pool_base &pool)
     transaction::run(pool, [&]
     {
         (*queue_hash).erase(temp->key);
-        if(temp != NULL)
+        if(temp != nullptr)
         {
             head->next = temp->next;
             if(head->next)
@@ -114,7 +114,7 @@ persistent_ptr<pmem_entry> pmem_queue::del(uint64_t key)
         }
         temp = temp->next;
     }
-    if(temp == NULL)
+    if(temp == nullptr)
         return 0;
     temp->prev->next = temp->next;
     if(temp == tail)
@@ -134,4 +134,17 @@ void pmem_queue::print()
         temp = temp->prev;
     }
     std::cout<<"\n";
+}
+
+pmem_queue::~pmem_queue()
+{
+    persistent_ptr<pmem_entry> temp = head->next;
+    while(temp != nullptr)
+    {
+        temp = temp->next;
+        delete_persistent<pmem_entry>(temp->prev);
+    }
+    head = nullptr;
+    tail = nullptr;
+    queue_hash.clear();
 }

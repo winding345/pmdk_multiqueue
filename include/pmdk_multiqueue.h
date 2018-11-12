@@ -2,6 +2,7 @@
 #define _PMDK_MULTI_QUEUE_
 
 #include "pmdk_queue.h"
+#include "define.h"
 
 class block_info
 {
@@ -18,11 +19,23 @@ public:
     persistent_ptr<persistent_ptr<pmem_queue>[]> mq;
     persistent_ptr<pmem_queue> history_queue;
 
-    p<int> multi_num,queue_len,default_level = -1;
+    p<int> multi_num,queue_len,default_level;
+
+    std::map<uint64_t,int>* history_map;//记录history中数据对应的原来queue
+    std::map<uint64_t,block_info* >* mq_hash;
 
     pmem_multiqueue(pool_base &pop,int multi_num,int queue_len,int default_level);
-//    int push(uint64_t key,char* value);
-//    void print();
+    int search_node(uint64_t key);
+    int push(pool_base &pop,uint64_t key,char* value);
+    int update(pool_base &pop,uint64_t key,int level);
+    persistent_ptr<pmem_entry> pop();
+    int levelup(uint64_t key,int level);
+//    int leveldown(uint64_t key,int level);
+    int mq2history(int level);
+    int history2mq(uint64_t key);
+//
+    int do_decay();
+    void print();
 };
 
 #endif // _PMDK_MULTI_QUEUE_
