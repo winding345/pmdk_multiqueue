@@ -18,7 +18,7 @@ public:
     persistent_ptr<persistent_ptr<pmem_queue>[]> mq;
     persistent_ptr<pmem_queue> history_queue;
 
-    p<int> multi_num,queue_len,default_level = 0;
+    p<int> multi_num,queue_len,default_level = -1;
 
     pmem_multiqueue(pool_base &pop,int multi_num,int queue_len,int default_level);
 //    int push(uint64_t key,char* value);
