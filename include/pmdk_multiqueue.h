@@ -27,7 +27,7 @@ public:
     pmem_multiqueue(pool_base &pop,int multi_num,int queue_len,int default_level);
     int search_node(uint64_t key);
     int push(pool_base &pop,uint64_t key,char* value);
-    int update(pool_base &pop,uint64_t key,int level);
+    int update(uint64_t key,int level);
     persistent_ptr<pmem_entry> pop();
     int levelup(uint64_t key,int level);
 //    int leveldown(uint64_t key,int level);
