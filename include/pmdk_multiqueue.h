@@ -34,7 +34,7 @@ public:
     int mq2history(int level);
     int history2mq(uint64_t key);
 //
-    int do_decay();
+    int do_decay(pool_base &pop);
     void print();
 };
 
