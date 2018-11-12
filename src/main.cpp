@@ -21,6 +21,6 @@ int main(int argc,char *argv[])
     auto r = pop.root();
     transaction::run(pop, [&]
     {
-         r->mq = make_persistent<pmem_multiqueue>(1,2,3);
+         r->mq = make_persistent<pmem_multiqueue>(pop,1,2,3);
     });
 }
