@@ -28,7 +28,7 @@ public:
     int search_node(uint64_t key);
     int push(pool_base &pop,uint64_t key,char* value);
     int update(pool_base &pop,uint64_t key,int level);
-    persistent_ptr<pmem_entry> pop();
+    persistent_ptr<pmem_entry> pop(pool_base &pool);
     int levelup(pool_base &pop,uint64_t key,int level);
 //    int leveldown(uint64_t key,int level);
     int mq2history(pool_base &pop,int level);

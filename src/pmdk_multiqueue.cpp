@@ -28,10 +28,10 @@ int pmem_multiqueue::push(pool_base &pop,uint64_t key,char* value)
 {
     int level = search_node(key);
     if(level != -2)
-        return update(key,level);
+        return update(pop,key,level);
     persistent_ptr<pmem_queue> op_queue = mq[default_level];
     if(op_queue->isFull())
-        mq2history(default_level);
+        mq2history(pop,default_level);
     op_queue->push(pop,key,value);
     (*mq_hash)[key] = new block_info(READ_VALUE,default_level);
     return 1;
@@ -41,21 +41,21 @@ int pmem_multiqueue::update(pool_base &pop,uint64_t key,int level)
 {
     std::cout<<"update"<<std::endl;
     if(level == -1)
-        return history2mq(key);
+        return history2mq(pop,key);
     //ÈÈ¶ÈÌáÉý
     (*mq_hash)[key]->hot += READ_VALUE;
     if(level + 1 != multi_num && (*mq_hash)[key]->hot >= HOT_LEVEL)
     {
-        return levelup(key,level);
+        return levelup(pop,key,level);
     }
-    return mq[level]->update_node(key);
+    return mq[level]->update_node(pop,key);
 }
 
-persistent_ptr<pmem_entry> pmem_multiqueue::pop()
+persistent_ptr<pmem_entry> pmem_multiqueue::pop(pool_base &pool)
 {
     if(history_queue->queue_size == 0)
         return NULL;
-    persistent_ptr<pmem_entry> temp = history_queue->pop();
+    persistent_ptr<pmem_entry> temp = history_queue->pop(pool);
     history_map->erase(temp->key);
     delete((*mq_hash)[temp->key]);
     mq_hash->erase(temp->key);
@@ -76,13 +76,13 @@ int pmem_multiqueue::levelup(pool_base &pop,uint64_t key,int level)
     (*mq_hash)[key]->hot = READ_VALUE;
     if(op_queue->isFull())
         mq2history(level+1);
-    return op_queue->push(temp->key,temp->value);
+    return op_queue->push(pop,temp->key,temp->value);
 }
 
 int pmem_multiqueue::mq2history(pool_base &pop,int level)
 {
     std::cout<<"mq2history"<<std::endl;
-    persistent_ptr<pmem_entry> entry = mq[level]->pop();
+    persistent_ptr<pmem_entry> entry = mq[level]->pop(pop);
     if(history_queue->isFull())
         pop();
     history_queue->push(entry->key,entry->value);
