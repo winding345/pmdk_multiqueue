@@ -79,12 +79,12 @@ int pmem_multiqueue::levelup(pool_base &pop,uint64_t key,int level)
     return op_queue->push(pop,(uint64_t)temp->key,(char*)temp->value);
 }
 
-int pmem_multiqueue::mq2history(pool_base &pop,int level)
+int pmem_multiqueue::mq2history(pool_base &pool,int level)
 {
     std::cout<<"mq2history"<<std::endl;
-    persistent_ptr<pmem_entry> entry = mq[level]->pop(pop);
+    persistent_ptr<pmem_entry> entry = mq[level]->pop(pool);
     if(history_queue->isFull())
-        pop(pop);
+        pop(pool);
     history_queue->push(entry->key,entry->value);
     (*mq_hash)[entry->key]->level = -1;
     (*history_map)[entry->key] = level;
@@ -111,7 +111,7 @@ int pmem_multiqueue::history2mq(pool_base &pop,uint64_t key)
     std::cout<<temp->key<<std::endl;
     persistent_ptr<pmem_queue> op_queue = mq[level];
     if(op_queue->isFull())
-        mq2history(level);
+        mq2history(pop,level);
     std::cout<<temp->key<<std::endl;
     return op_queue->push((uint64_t)temp->key,(char*)temp->value);
 }
@@ -125,7 +125,7 @@ int pmem_multiqueue::do_decay(pool_base &pop)
         {
             mq[i] = mq[i+1];
         }
-        delete(temp);
+        delete_persistent<pmem_queue>(temp);
         mq[multi_num-1] = make_persistent<pmem_queue>();
         mq[multi_num-1]->init(pop,queue_len);
         std::map<uint64_t,block_info* >::iterator it;
