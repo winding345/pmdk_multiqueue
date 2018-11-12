@@ -11,7 +11,7 @@ pmem_multiqueue::pmem_multiqueue(pool_base &pop,int multi_num,int queue_len,int 
 //    history_queue = new pmem_queue(queue_len);
     std::cout<<this->default_level<<std::endl;
     std::cout<<default_level<<std::endl;
-    if(this->default_level != 0)
+    if(this->default_level != -1)
     {
         //
         return;
