@@ -32,7 +32,7 @@ int pmem_multiqueue::push(pool_base &pop,uint64_t key,char* value)
     persistent_ptr<pmem_queue> op_queue = mq[default_level];
     if(op_queue->isFull())
         mq2history(default_level);
-    op_queue->push(key,value);
+    op_queue->push(pop,key,value);
     (*mq_hash)[key] = new block_info(READ_VALUE,default_level);
     return 1;
 }
