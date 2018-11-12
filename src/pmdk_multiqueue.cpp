@@ -9,7 +9,8 @@ pmem_multiqueue::pmem_multiqueue(pool_base &pop,int multi_num,int queue_len,int 
 //        hot_range.push_back(HOT_LEVEL);
 //    }
 //    history_queue = new pmem_queue(queue_len);
-    std::cout<<this->default_level;
+    std::cout<<this->default_level<<std::endl;
+    std::cout<<default_level<<std::endl;
     if(this->default_level != 0)
     {
         //
@@ -18,6 +19,8 @@ pmem_multiqueue::pmem_multiqueue(pool_base &pop,int multi_num,int queue_len,int 
     this->multi_num = multi_num;
     this->queue_len = queue_len;
     this->default_level = default_level;
+    std::cout<<this->default_level<<std::endl;
+    std::cout<<default_level<<std::endl;
     transaction::run(pop, [&]
     {
         mq = make_persistent<persistent_ptr<pmem_queue>[]>(multi_num);
