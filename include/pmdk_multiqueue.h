@@ -25,14 +25,14 @@ public:
     std::map<uint64_t,block_info* >* mq_hash;
 
     pmem_multiqueue(pool_base &pop,int multi_num,int queue_len,int default_level);
-    int search_node(uint64_t key);
+    int search_node(pool_base &pop,uint64_t key);
     int push(pool_base &pop,uint64_t key,char* value);
-    int update(uint64_t key,int level);
+    int update(pool_base &pop,uint64_t key,int level);
     persistent_ptr<pmem_entry> pop();
-    int levelup(uint64_t key,int level);
+    int levelup(pool_base &pop,uint64_t key,int level);
 //    int leveldown(uint64_t key,int level);
-    int mq2history(int level);
-    int history2mq(uint64_t key);
+    int mq2history(pool_base &pop,int level);
+    int history2mq(pool_base &pop,uint64_t key);
 //
     int do_decay(pool_base &pop);
     void print();

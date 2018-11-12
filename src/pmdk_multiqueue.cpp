@@ -28,16 +28,16 @@ int pmem_multiqueue::push(pool_base &pop,uint64_t key,char* value)
 {
     int level = search_node(key);
     if(level != -2)
-        return update(pop,key,level);
+        return update(key,level);
     persistent_ptr<pmem_queue> op_queue = mq[default_level];
     if(op_queue->isFull())
         mq2history(default_level);
-    op_queue->push(key,value);
+    op_queue->push(pop,key,value);
     (*mq_hash)[key] = new block_info(READ_VALUE,default_level);
     return 1;
 }
 
-int pmem_multiqueue::update(uint64_t key,int level)
+int pmem_multiqueue::update(pool_base &pop,uint64_t key,int level)
 {
     std::cout<<"update"<<std::endl;
     if(level == -1)
@@ -62,7 +62,7 @@ persistent_ptr<pmem_entry> pmem_multiqueue::pop()
     return temp;
 }
 
-int pmem_multiqueue::levelup(uint64_t key,int level)
+int pmem_multiqueue::levelup(pool_base &pop,uint64_t key,int level)
 {
     std::cout<<"levelup"<<std::endl;
     if(level >= multi_num - 1)
@@ -79,7 +79,7 @@ int pmem_multiqueue::levelup(uint64_t key,int level)
     return op_queue->push(temp->key,temp->value);
 }
 
-int pmem_multiqueue::mq2history(int level)
+int pmem_multiqueue::mq2history(pool_base &pop,int level)
 {
     std::cout<<"mq2history"<<std::endl;
     persistent_ptr<pmem_entry> entry = mq[level]->pop();
@@ -91,7 +91,7 @@ int pmem_multiqueue::mq2history(int level)
     return 1;
 }
 
-int pmem_multiqueue::history2mq(uint64_t key)
+int pmem_multiqueue::history2mq(pool_base &pop,uint64_t key)
 {
     std::cout<<"history2mq"<<std::endl;
     persistent_ptr<pmem_entry> temp = history_queue->del(key);
@@ -113,7 +113,7 @@ int pmem_multiqueue::history2mq(uint64_t key)
     if(op_queue->isFull())
         mq2history(level);
     std::cout<<temp->key<<std::endl;
-    return op_queue->push((uuint64_t)temp->key,(char*)temp->value);
+    return op_queue->push((uint64_t)temp->key,(char*)temp->value);
 }
 
 int pmem_multiqueue::do_decay(pool_base &pop)
