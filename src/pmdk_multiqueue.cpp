@@ -28,6 +28,6 @@ pmem_multiqueue::pmem_multiqueue(pool_base &pop,int multi_num,int queue_len,int 
         history_queue = make_persistent<pmem_queue>();
         history_queue->init(pop,queue_len);
     });
-    std::cout<<history_queue->queue_size<<std::endl;
+    std::cout<<history_queue->queue_size<<"size"<<std::endl;
 }
 

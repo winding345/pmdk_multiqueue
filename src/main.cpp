@@ -7,7 +7,7 @@ int main(int argc,char *argv[])
     {
     public:
         persistent_ptr<pmem_multiqueue> mq;
-    };;
+    };
 
     pool<rnode> pop;
     if (file_exists(path) != 0)
