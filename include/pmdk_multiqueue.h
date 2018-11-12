@@ -27,5 +27,3 @@ public:
 
 #endif // _PMDK_MULTI_QUEUE_
 
-
-//persistent_ptr<int[]> new_array =make_persistent<int[]>(size);

@@ -6,7 +6,7 @@ int main(int argc,char *argv[])
     class rnode
     {
     public:
-        persistent_ptr<pmem_multiqueue> mq;
+        persistent_ptr<pmem_multiqueue> mq = nullptr;
     };
 
     pool<rnode> pop;
@@ -21,7 +21,7 @@ int main(int argc,char *argv[])
     auto r = pop.root();
     transaction::run(pop, [&]
     {
-        if(r->mq->default_level == -1)
+        if(r->mq == nullptr)
             r->mq = make_persistent<pmem_multiqueue>(pop,1,2,3);
     });
 }
