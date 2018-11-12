@@ -9,6 +9,7 @@ pmem_multiqueue::pmem_multiqueue(pool_base &pop,int multi_num,int queue_len,int 
 //        hot_range.push_back(HOT_LEVEL);
 //    }
 //    history_queue = new pmem_queue(queue_len);
+    std::cout<<this->default_level;
     if(this->default_level != 0)
     {
         //
