@@ -41,10 +41,7 @@ public:
             memcpy(&data_[0], src.c_str(), src.size());
             data_[src.size()] = 0;
             size_ = src.size();
-//            printf("p_string = %s\n", &data_[0]);
-            std::cout<<data_<<std::endl;
             std::cout<<&data_[0]<<std::endl;
-
         });
 
     }

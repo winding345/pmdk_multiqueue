@@ -22,10 +22,23 @@ int main(int argc,char *argv[])
     transaction::run(pop, [&]
     {
         if(r->mq == nullptr)
-            r->mq = make_persistent<pmem_multiqueue>(pop,1,2,3);
+            r->mq = make_persistent<pmem_multiqueue>(pop,4,2,1);
         else
         {
             ;
         }
     });
+    int i = 100,input = 0;
+    while(i--)
+    {
+        cin>>input;
+        if(input == -1)
+            break;
+        if(input == -2)
+            r->mq->do_decay();
+        else
+            r->mq->push(input,NULL);
+        r->mq->print();
+    }
+    return 0;
 }
