@@ -85,7 +85,7 @@ int pmem_multiqueue::mq2history(pool_base &pool,int level)
     persistent_ptr<pmem_entry> entry = mq[level]->pop(pool);
     if(history_queue->isFull())
         pop(pool);
-    history_queue->push(entry->key,entry->value->data());
+    history_queue->push(pool,entry->key,entry->value->data());
     (*mq_hash)[entry->key]->level = -1;
     (*history_map)[entry->key] = level;
     return 1;
