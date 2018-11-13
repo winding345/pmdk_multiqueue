@@ -34,6 +34,7 @@ int main(int argc,char *argv[])
     {
         std::cin>>input;
         sprintf(itc,"%d.bmp",i);
+        std::cout<<input<<" "<<itc<<endl;
         if(input == -1)
             break;
         if(input == -2)
