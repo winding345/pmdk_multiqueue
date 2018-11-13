@@ -31,13 +31,13 @@ int main(int argc,char *argv[])
     int i = 100,input = 0;
     while(i--)
     {
-        cin>>input;
+        std::cin>>input;
         if(input == -1)
             break;
         if(input == -2)
-            r->mq->do_decay();
+            r->mq->do_decay(pop);
         else
-            r->mq->push(input,NULL);
+            r->mq->push(pop,input,itoa(input));
         r->mq->print();
     }
     return 0;
