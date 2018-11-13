@@ -33,8 +33,7 @@ int main(int argc,char *argv[])
     while(i--)
     {
         std::cin>>input;
-        sprintf(itc,"%d.bmp",i);
-        std::cout<<input<<" "<<itc<<std::endl;
+        sprintf(itc,"%d",input);
         if(input == -1)
             break;
         if(input == -2)
