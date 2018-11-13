@@ -41,7 +41,7 @@ public:
             memcpy(&data_[0], src.c_str(), src.size());
             data_[src.size()] = 0;
             size_ = src.size();
-            std::cout<<&data_[0]<<std::endl;
+//            std::cout<<&data_[0]<<std::endl;
         });
 
     }
