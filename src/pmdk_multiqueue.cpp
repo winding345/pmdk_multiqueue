@@ -44,6 +44,7 @@ int pmem_multiqueue::hash_recovery()
         (*history_map)[temp->key] = 0;
         temp = temp->prev;
     }
+    print();
     return 1;
 }
 
