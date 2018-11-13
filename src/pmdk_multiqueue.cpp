@@ -139,11 +139,9 @@ int pmem_multiqueue::history2mq(pool_base &pop,uint64_t key)
         ++level;
     }
     (*mq_hash)[key]->level = level;
-    std::cout<<temp->key<<std::endl;
     persistent_ptr<pmem_queue> op_queue = mq[level];
     if(op_queue->isFull())
         mq2history(pop,level);
-    std::cout<<temp->key<<std::endl;
     return op_queue->push(pop,(uint64_t)temp->key,temp->value->data());
 }
 
