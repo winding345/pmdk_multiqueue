@@ -14,6 +14,8 @@ pmem_multiqueue::pmem_multiqueue(pool_base &pop,int multi_num,int queue_len,int 
         history_queue = make_persistent<pmem_queue>();
         history_queue->init(pop,queue_len);
     });
+    history_map = new std::map<uint64_t,int>();
+    mq_hash = new std::map<uint64_t,block_info*>();
     std::cout<<history_queue->queue_size<<"size"<<std::endl;
 }
 
