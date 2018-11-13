@@ -31,8 +31,43 @@ class pmem_entry
 {
 public:
     persistent_ptr<pmem_entry> next,prev;
-    persistent_ptr<char> value;
+    persistent_ptr<p_string> value;
     p<uint64_t> key;
+};
+
+class p_string
+{
+public:
+    persistent_ptr<char[]> data_;
+    p<size_t> size_;
+
+    p_string(pool_base& pop, const std::string& src)
+    {
+        transaction::run(pop, [&]
+        {
+            data_ = make_persistent<char[]>(src.size() + 1);
+            memcpy(&data_[0], src.c_str(), src.size());
+            data_[src.size()] = 0;
+            size_ = src.size();
+            printf("p_string = %s\n", &data_[0]);
+        });
+
+    }
+
+    int compare(const std::string& right)
+    {
+        return strcmp(&data_[0], right.c_str());
+    }
+
+    const char* data()
+    {
+        return &data_[0];
+    }
+
+    size_t size()
+    {
+        return size_;
+    }
 };
 
 class pmem_queue
@@ -48,7 +83,10 @@ public:
     int search_node(uint64_t key);
     int update_node(pool_base &pop,uint64_t key);
     int push(pool_base &pool,uint64_t key,char* value);
-    int isFull(){return queue_size == capacity;}
+    int isFull()
+    {
+        return queue_size == capacity;
+    }
     persistent_ptr<pmem_entry> pop(pool_base &pool);
     persistent_ptr<pmem_entry> del(uint64_t key);
     void print(pool_base &pop);

@@ -9,7 +9,7 @@ int pmem_queue::init(pool_base &pop,int cap)
         {
             head = make_persistent<pmem_entry>();
             head->key = 0;
-            head->value = nullptr;
+            head->value = make_persistent<p_string>("");
             head->next = nullptr;
             head->prev = nullptr;
             capacity = cap;
@@ -77,7 +77,7 @@ int pmem_queue::push(pool_base &pool,uint64_t key,char* value)
             tail->next->next = nullptr;
             tail = tail->next;
             tail->key = key;
-            tail->value = value;
+            tail->value = make_persistent<p_string>(std::string(value));
             (*queue_hash)[key] = 1;
             queue_size = queue_size + 1;
         }
