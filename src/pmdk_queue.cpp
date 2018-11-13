@@ -71,7 +71,7 @@ int pmem_queue::push(pool_base &pool,uint64_t key,char* value)
         else
         {
             if(queue_size == capacity)
-                delete(pop(pool));
+                delete_persistent<pmem_entry>(pop(pool));
             tail->next = make_persistent<pmem_entry>();
             tail->next->prev = tail;
             tail->next->next = nullptr;
@@ -125,7 +125,7 @@ persistent_ptr<pmem_entry> pmem_queue::del(uint64_t key)
     queue_size = queue_size - 1;
     return temp;
 }
-void pmem_queue::print()
+void pmem_queue::print(pool_base &pop)
 {
     persistent_ptr<pmem_entry> temp = tail;
     while(temp && temp != head)
@@ -146,5 +146,5 @@ pmem_queue::~pmem_queue()
     }
     head = nullptr;
     tail = nullptr;
-    queue_hash.clear();
+    queue_hash->clear();
 }
