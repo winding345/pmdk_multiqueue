@@ -9,7 +9,7 @@ int pmem_queue::init(pool_base &pop,int cap)
         {
             head = make_persistent<pmem_entry>();
             head->key = 0;
-            head->value = make_persistent<p_string>(pop,"");
+            head->value = make_persistent<p_string>(pop,"this is a head");
             head->next = nullptr;
             head->prev = nullptr;
             capacity = cap;
