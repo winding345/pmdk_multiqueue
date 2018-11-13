@@ -52,7 +52,7 @@ public:
         return strcmp(&data_[0], right.c_str());
     }
 
-    const char* data()
+    char* data()
     {
         return &data_[0];
     }

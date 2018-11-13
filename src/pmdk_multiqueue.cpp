@@ -113,7 +113,7 @@ int pmem_multiqueue::history2mq(pool_base &pop,uint64_t key)
     if(op_queue->isFull())
         mq2history(pop,level);
     std::cout<<temp->key<<std::endl;
-    return op_queue->push((uint64_t)temp->key,temp->value->data());
+    return op_queue->push(pop,(uint64_t)temp->key,temp->value->data());
 }
 
 int pmem_multiqueue::do_decay(pool_base &pop)
