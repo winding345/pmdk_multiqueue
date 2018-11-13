@@ -29,15 +29,17 @@ int main(int argc,char *argv[])
         }
     });
     int i = 100,input = 0;
+    char itc[100];
     while(i--)
     {
         std::cin>>input;
+        sprintf(itc,"%d.bmp",i)
         if(input == -1)
             break;
         if(input == -2)
             r->mq->do_decay(pop);
         else
-            r->mq->push(pop,input,itoa(input));
+            r->mq->push(pop,input,itc);
         r->mq->print();
     }
     return 0;
