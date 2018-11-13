@@ -42,7 +42,9 @@ public:
             data_[src.size()] = 0;
             size_ = src.size();
 //            printf("p_string = %s\n", &data_[0]);
-            std::cout<<data_;
+            std::cout<<data_<<std::endl;
+            std::cout<<&data_[0]<<std::endl;
+
         });
 
     }

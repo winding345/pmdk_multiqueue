@@ -19,7 +19,7 @@ int pmem_queue::init(pool_base &pop,int cap)
 
     });
     queue_hash = new std::map<uint64_t,int>();
-//    std::cout<<(*queue_hash).size()<<std::endl;
+    std::cout<<(*queue_hash).size()<<std::endl;
     queue_hash->clear();
     std::cout<<"init"<<std::endl;
     persistent_ptr<pmem_entry> temp = head->next;
