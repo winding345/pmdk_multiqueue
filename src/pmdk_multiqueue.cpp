@@ -39,6 +39,7 @@ int pmem_multiqueue::hash_recovery(pool_base &pop)
     }
     //±éÀúhistory_map
     temp = history_queue->tail;
+    history_queue->init(pop,queue_len);
     while(temp &&temp != history_queue->head)
     {
         (*mq_hash)[temp->key] = new block_info(READ_VALUE,-1);
