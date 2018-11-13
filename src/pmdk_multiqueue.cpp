@@ -76,7 +76,7 @@ int pmem_multiqueue::levelup(pool_base &pop,uint64_t key,int level)
     (*mq_hash)[key]->hot = READ_VALUE;
     if(op_queue->isFull())
         mq2history(pop,level+1);
-    return op_queue->push(pop,(uint64_t)temp->key,(char*)temp->value);
+    return op_queue->push(pop,(uint64_t)temp->key,temp->value->data());
 }
 
 int pmem_multiqueue::mq2history(pool_base &pool,int level)
@@ -85,7 +85,7 @@ int pmem_multiqueue::mq2history(pool_base &pool,int level)
     persistent_ptr<pmem_entry> entry = mq[level]->pop(pool);
     if(history_queue->isFull())
         pop(pool);
-    history_queue->push(entry->key,entry->value);
+    history_queue->push(entry->key,entry->value->data());
     (*mq_hash)[entry->key]->level = -1;
     (*history_map)[entry->key] = level;
     return 1;
@@ -113,7 +113,7 @@ int pmem_multiqueue::history2mq(pool_base &pop,uint64_t key)
     if(op_queue->isFull())
         mq2history(pop,level);
     std::cout<<temp->key<<std::endl;
-    return op_queue->push((uint64_t)temp->key,(char*)temp->value);
+    return op_queue->push((uint64_t)temp->key,temp->value->data());
 }
 
 int pmem_multiqueue::do_decay(pool_base &pop)
