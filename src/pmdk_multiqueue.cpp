@@ -19,7 +19,7 @@ pmem_multiqueue::pmem_multiqueue(pool_base &pop,int multi_num,int queue_len,int 
     std::cout<<history_queue->queue_size<<"size"<<std::endl;
 }
 
-int pmem_multiqueue::hash_recovery()
+int pmem_multiqueue::hash_recovery(pool_base &pop)
 {
     std::cout<<"hash_recovery"<<std::endl;
     history_map = new std::map<uint64_t,int>();
@@ -29,6 +29,7 @@ int pmem_multiqueue::hash_recovery()
     //±éÀúmq
     for(int i = 0;i < multi_num;++i)
     {
+        mq[i]->init(pop,queue_len);
         temp = mq[i]->tail;
         while(temp &&temp != mq[i]->head)
         {
