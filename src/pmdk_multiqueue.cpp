@@ -126,8 +126,11 @@ int pmem_multiqueue::mq2history(pool_base &pool,int level)
     }
     std::cout<<"mq2history4"<<std::endl;
     history_queue->push(pool,entry->key,entry->value->data());
+    std::cout<<"mq2history5"<<std::endl;
     (*mq_hash)[entry->key]->level = -1;
+    std::cout<<"mq2history6"<<std::endl;
     (*history_map)[entry->key] = level;
+    std::cout<<"mq2history7"<<std::endl;
     return 1;
 }
 
