@@ -25,6 +25,7 @@ public:
     std::map<uint64_t,block_info* >* mq_hash;
 
     pmem_multiqueue(pool_base &pop,int multi_num,int queue_len,int default_level);
+    int hash_recovery();
     int search_node(uint64_t key);
     int push(pool_base &pop,uint64_t key,char* value);
     int update(pool_base &pop,uint64_t key,int level);

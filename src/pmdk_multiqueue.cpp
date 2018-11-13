@@ -19,6 +19,34 @@ pmem_multiqueue::pmem_multiqueue(pool_base &pop,int multi_num,int queue_len,int 
     std::cout<<history_queue->queue_size<<"size"<<std::endl;
 }
 
+int pmem_multiqueue::hash_recovery()
+{
+    std::cout<<"hash_recovery"<<std::endl;
+    history_map = new std::map<uint64_t,int>();
+    mq_hash = new std::map<uint64_t,block_info*>();
+    //恢复过程中所有的热度均为1，history_map中的对应的原队列为0队列
+    persistent_ptr<pmem_entry> temp;
+    //遍历mq
+    for(int i = 0;i < multi_num;++i)
+    {
+        temp = mq[i]->tail;
+        while(temp &&temp != mq[i]->head)
+        {
+            (*mq_hash)[temp->key] = new block_info(READ_VALUE,i);
+            temp = temp->prev;
+        }
+    }
+    //遍历history_map
+    temp = history_queue->tail;
+    while(temp &&temp != history_queue->head)
+    {
+        (*mq_hash)[temp->key] = new block_info(READ_VALUE,-1);
+        (*history_map)[temp->key] = 0;
+        temp = temp->prev;
+    }
+    return 1;
+}
+
 int pmem_multiqueue::search_node(uint64_t key)
 {
     if((*mq_hash).find(key) == (*mq_hash).end())
