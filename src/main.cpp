@@ -25,7 +25,7 @@ int main(int argc,char *argv[])
             r->mq = make_persistent<pmem_multiqueue>(pop,4,2,1);
         else
         {
-            r->mq->hash_recovery();
+            r->mq->hash_recovery(pop);
         }
     });
     int i = 100,input = 0;
