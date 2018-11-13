@@ -64,7 +64,6 @@ int pmem_multiqueue::push(pool_base &pop,uint64_t key,char* value)
     persistent_ptr<pmem_queue> op_queue = mq[default_level];
     if(op_queue->isFull())
     {
-        std::cout<<"isFull"<<std::endl;
         mq2history(pop,default_level);
     }
 
@@ -119,8 +118,13 @@ int pmem_multiqueue::mq2history(pool_base &pool,int level)
 {
     std::cout<<"mq2history"<<std::endl;
     persistent_ptr<pmem_entry> entry = mq[level]->pop(pool);
+    std::cout<<"mq2history2"<<std::endl;
     if(history_queue->isFull())
+    {
+        std::cout<<"mq2history3"<<std::endl;
         pop(pool);
+    }
+    std::cout<<"mq2history4"<<std::endl;
     history_queue->push(pool,entry->key,entry->value->data());
     (*mq_hash)[entry->key]->level = -1;
     (*history_map)[entry->key] = level;
