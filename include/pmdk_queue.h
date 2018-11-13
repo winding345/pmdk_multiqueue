@@ -27,14 +27,6 @@ using pmem::obj::pool;
 using pmem::obj::pool_base;
 using pmem::obj::transaction;
 
-class pmem_entry
-{
-public:
-    persistent_ptr<pmem_entry> next,prev;
-    persistent_ptr<p_string> value;
-    p<uint64_t> key;
-};
-
 class p_string
 {
 public:
@@ -49,7 +41,8 @@ public:
             memcpy(&data_[0], src.c_str(), src.size());
             data_[src.size()] = 0;
             size_ = src.size();
-            printf("p_string = %s\n", &data_[0]);
+//            printf("p_string = %s\n", &data_[0]);
+            std::cout<<data_;
         });
 
     }
@@ -68,6 +61,14 @@ public:
     {
         return size_;
     }
+};
+
+class pmem_entry
+{
+public:
+    persistent_ptr<pmem_entry> next,prev;
+    persistent_ptr<p_string> value;
+    p<uint64_t> key;
 };
 
 class pmem_queue
