@@ -9,6 +9,7 @@ class block_info
 public:
     int hot;
     int level;
+    persistent_ptr<pmem_entry>
     block_info(){}
     block_info(int hot,int level):hot(hot),level(level){}
 };
@@ -34,7 +35,7 @@ public:
 //    int leveldown(uint64_t key,int level);
     int mq2history(pool_base &pop,int level);
     int history2mq(pool_base &pop,uint64_t key);
-//
+    persistent_ptr<pmem_entry> lookup(pool_base &pool,uint64_t key);
     int do_decay(pool_base &pop);
     void print();
 };
