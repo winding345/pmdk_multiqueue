@@ -32,9 +32,9 @@ randCreate* randCreate::randCreater = NULL;
 int main(int argc,char *argv[])
 {
 
-    ofstream file("out.txt");
-    streambuf* strm_buffer = std::cout.rdbuf();
-    std::cout.rdbuf(file.rdbuf());
+//    ofstream file("out.txt");
+//    streambuf* strm_buffer = std::cout.rdbuf();
+//    std::cout.rdbuf(file.rdbuf());
     const char *path = argv[1];
     class rnode
     {
@@ -75,8 +75,8 @@ int main(int argc,char *argv[])
             r->mq->do_decay(pop);
         else
             r->mq->push(pop,input,itc);
-        r->mq->print();
     }
+    r->mq->print();
 
     while(true)
     {
@@ -84,7 +84,10 @@ int main(int argc,char *argv[])
         if(input == -1)
             break;
         persistent_ptr<pmem_entry> entry = r->mq->lookup(pop,input);
-        std::cout<<entry->value->data()<<endl;
+        if(entry == nullptr)
+            std::cout<<"not found"<<endl;
+        else
+            std::cout<<entry->value->data()<<endl;
     }
     return 0;
 }
