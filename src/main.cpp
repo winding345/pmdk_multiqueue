@@ -4,6 +4,7 @@
 #include <iostream>
 #include <fstream>
 
+using namespace std;
 class randCreate
 {
 private:
@@ -30,8 +31,8 @@ int main(int argc,char *argv[])
 {
 
     ofstream file("out.txt");
-    streambuf* strm_buffer = cout.rdbuf();
-    cout.rdbuf(file.rdbuf());
+    streambuf* strm_buffer = std::cout.rdbuf();
+    std::cout.rdbuf(file.rdbuf());
     const char *path = argv[1];
     class rnode
     {
