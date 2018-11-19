@@ -138,7 +138,7 @@ void pmem_queue::print(pool_base &pop)
 
 pmem_queue::~pmem_queue()
 {
-    std::cout<<"this is delte pmem_queue"<<std::endl;
+//    std::cout<<"this is delte pmem_queue"<<std::endl;
     persistent_ptr<pmem_entry> temp = head->next;
     while(temp != nullptr)
     {

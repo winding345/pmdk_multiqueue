@@ -32,9 +32,9 @@ randCreate* randCreate::randCreater = NULL;
 int main(int argc,char *argv[])
 {
 
-//    ofstream file("out.txt");
-//    streambuf* strm_buffer = std::cout.rdbuf();
-//    std::cout.rdbuf(file.rdbuf());
+    ofstream file("out.txt");
+    streambuf* strm_buffer = std::cout.rdbuf();
+    std::cout.rdbuf(file.rdbuf());
     const char *path = argv[1];
     class rnode
     {
@@ -55,7 +55,7 @@ int main(int argc,char *argv[])
     transaction::run(pop, [&]
     {
         if(r->mq == nullptr)
-            r->mq = make_persistent<pmem_multiqueue>(pop,4,2,1);
+            r->mq = make_persistent<pmem_multiqueue>(pop,4,15,1);
         else
         {
             r->mq->hash_recovery(pop);
@@ -65,9 +65,9 @@ int main(int argc,char *argv[])
     char itc[100];
     while(i--)
     {
-        std::cin>>input;
-//        input = randCreate::getCreater()->get(0,10);
-        std::cout<<"input ~~~ "<<input<<std::endl;
+//        std::cin>>input;
+        input = randCreate::getCreater()->get(0,80);
+        std::cout<<"input: "<<input<<std::endl;
         sprintf(itc,"%d",input);
         if(input == -1)
             break;
