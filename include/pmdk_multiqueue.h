@@ -9,7 +9,6 @@ class block_info
 public:
     int hot;
     int level;
-    persistent_ptr<pmem_entry>
     block_info(){}
     block_info(int hot,int level):hot(hot),level(level){}
 };
