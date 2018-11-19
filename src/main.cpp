@@ -1,7 +1,37 @@
 #include "pmdk_multiqueue.h"
+#include <stdlib.h>
+#include <time.h>
+#include <iostream>
+#include <fstream>
+
+class randCreate
+{
+private:
+    static randCreate* randCreater;
+    randCreate()
+    {
+        srand(time(NULL));
+    }
+public:
+    static randCreate* getCreater()
+    {
+        if(randCreater == NULL)
+            randCreater = new randCreate();
+        return randCreater;
+    }
+    int get(int low,int high)
+    {
+        if(high < low)return -1;
+        return rand()%(high - low + 1) + low;
+    }
+};
 
 int main(int argc,char *argv[])
 {
+
+    ofstream file("out.txt");
+    streambuf* strm_buffer = cout.rdbuf();
+    cout.rdbuf(file.rdbuf());
     const char *path = argv[1];
     class rnode
     {
@@ -32,15 +62,26 @@ int main(int argc,char *argv[])
     char itc[100];
     while(i--)
     {
-        std::cin>>input;
+        //std::cin>>input;
+        input = randCreate::getCreater()->get(0,10);
         sprintf(itc,"%d",input);
         if(input == -1)
             break;
-        if(input == -2)
+        if(input == 0)
             r->mq->do_decay(pop);
         else
             r->mq->push(pop,input,itc);
         r->mq->print();
+    }
+
+    while(true)
+    {
+        std::cin>>input;
+        if(input == -1)
+            break;
+        persistent_ptr<pmem_entry> entry = r->mq->lookup(pop,input);
+        itc = (char*)entry->data();
+        std::cout<<itc<<endl;
     }
     return 0;
 }
