@@ -5,6 +5,7 @@
 #include <fstream>
 
 using namespace std;
+
 class randCreate
 {
 private:
@@ -26,6 +27,7 @@ public:
         return rand()%(high - low + 1) + low;
     }
 };
+randCreate* randCreate::randCreater = NULL;
 
 int main(int argc,char *argv[])
 {
