@@ -65,8 +65,8 @@ int main(int argc,char *argv[])
     char itc[100];
     while(i--)
     {
-        //std::cin>>input;
-        input = randCreate::getCreater()->get(0,10);
+        std::cin>>input;
+//        input = randCreate::getCreater()->get(0,10);
         sprintf(itc,"%d",input);
         if(input == -1)
             break;
