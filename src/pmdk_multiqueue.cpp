@@ -157,8 +157,8 @@ persistent_ptr<pmem_entry> pmem_multiqueue::lookup(pool_base &pool,uint64_t key)
     int level = search_node(key);
     if(level == -2)
         return nullptr;
-    update(pop,key,level);
-    return mq[search_node[key]]->tail;
+    update(pool,key,level);
+    return mq[search_node(key)]->tail;
 }
 
 int pmem_multiqueue::do_decay(pool_base &pop)
