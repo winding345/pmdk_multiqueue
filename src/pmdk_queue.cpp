@@ -143,7 +143,8 @@ pmem_queue::~pmem_queue()
     while(temp != nullptr)
     {
         temp = temp->next;
-        delete_persistent<pmem_entry>(temp->prev);
+        if(temp != nullptr)
+            delete_persistent<pmem_entry>(temp->prev);
     }
     head = nullptr;
     tail = nullptr;
