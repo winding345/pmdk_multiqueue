@@ -81,8 +81,7 @@ int main(int argc,char *argv[])
         if(input == -1)
             break;
         persistent_ptr<pmem_entry> entry = r->mq->lookup(pop,input);
-        itc = (char*)entry->value->data();
-        std::cout<<itc<<endl;
+        std::cout<<entry->value->data()<<endl;
     }
     return 0;
 }
