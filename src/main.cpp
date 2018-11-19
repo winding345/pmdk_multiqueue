@@ -32,9 +32,9 @@ randCreate* randCreate::randCreater = NULL;
 int main(int argc,char *argv[])
 {
 
-    ofstream file("out.txt");
-    streambuf* strm_buffer = std::cout.rdbuf();
-    std::cout.rdbuf(file.rdbuf());
+//    ofstream file("out.txt");
+//    streambuf* strm_buffer = std::cout.rdbuf();
+//    std::cout.rdbuf(file.rdbuf());
     const char *path = argv[1];
     class rnode
     {
@@ -65,8 +65,8 @@ int main(int argc,char *argv[])
     char itc[100];
     while(i--)
     {
-//        std::cin>>input;
-        input = randCreate::getCreater()->get(0,10);
+        std::cin>>input;
+//        input = randCreate::getCreater()->get(0,10);
         std::cout<<"input ~~~ "<<input<<std::endl;
         sprintf(itc,"%d",input);
         if(input == -1)
