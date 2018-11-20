@@ -74,16 +74,17 @@ int main(int argc,char *argv[])
         if(input == 0)
             r->mq->do_decay(pop);
         else
-            r->mq->push(pop,input,itc);
+            r->mq->push(pop,itc,itc);
     }
     r->mq->print();
 
     while(true)
     {
         std::cin>>input;
+        sprintf(itc,"%d",input);
         if(input == -1)
             break;
-        persistent_ptr<pmem_entry> entry = r->mq->lookup(pop,input);
+        persistent_ptr<pmem_entry> entry = r->mq->lookup(pop,itc);
         if(entry == nullptr)
             std::cout<<"not found"<<endl;
         else
