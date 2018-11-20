@@ -121,7 +121,7 @@ persistent_ptr<pmem_entry> pmem_queue::del(uint64_t key)
         tail = temp->prev;
     else
         temp->next->prev = temp->prev;
-    (*queue_hash).erase(temp->key->data());
+    (*queue_hash).erase(temp->key);
     queue_size = queue_size - 1;
     return temp;
 }

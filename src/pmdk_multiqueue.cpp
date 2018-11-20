@@ -14,16 +14,16 @@ pmem_multiqueue::pmem_multiqueue(pool_base &pop,int multi_num,int queue_len,int 
         history_queue = make_persistent<pmem_queue>();
         history_queue->init(pop,queue_len);
     });
-    history_map = new std::map<uint64_t,int>();
-    mq_hash = new std::map<uint64_t,block_info*>();
+    history_map = new std::map<char*,int>();
+    mq_hash = new std::map<char*,block_info*>();
     std::cout<<history_queue->queue_size<<"size"<<std::endl;
 }
 
 int pmem_multiqueue::hash_recovery(pool_base &pop)
 {
     std::cout<<"hash_recovery"<<std::endl;
-    history_map = new std::map<uint64_t,int>();
-    mq_hash = new std::map<uint64_t,block_info*>();
+    history_map = new std::map<char*,int>();
+    mq_hash = new std::map<char*,block_info*>();
     //恢复过程中所有的热度均为1，history_map中的对应的原队列为0队列
     persistent_ptr<pmem_entry> temp;
     //遍历mq
@@ -33,7 +33,7 @@ int pmem_multiqueue::hash_recovery(pool_base &pop)
         temp = mq[i]->tail;
         while(temp &&temp != mq[i]->head)
         {
-            (*mq_hash)[temp->key] = new block_info(READ_VALUE,i);
+            (*mq_hash)[temp->key->data()] = new block_info(READ_VALUE,i);
             temp = temp->prev;
         }
     }
@@ -42,22 +42,22 @@ int pmem_multiqueue::hash_recovery(pool_base &pop)
     history_queue->init(pop,queue_len);
     while(temp &&temp != history_queue->head)
     {
-        (*mq_hash)[temp->key] = new block_info(READ_VALUE,-1);
-        (*history_map)[temp->key] = 0;
+        (*mq_hash)[temp->key->data()] = new block_info(READ_VALUE,-1);
+        (*history_map)[temp->key->data()] = 0;
         temp = temp->prev;
     }
     print();
     return 1;
 }
 
-int pmem_multiqueue::search_node(uint64_t key)
+int pmem_multiqueue::search_node(char* key)
 {
     if((*mq_hash).find(key) == (*mq_hash).end())
         return -2;
     return (*mq_hash)[key]->level;
 }
 
-int pmem_multiqueue::push(pool_base &pop,uint64_t key,char* value)
+int pmem_multiqueue::push(pool_base &pop,char* key,char* value)
 {
     int level = search_node(key);
     if(level != -2)
@@ -73,14 +73,14 @@ int pmem_multiqueue::push(pool_base &pop,uint64_t key,char* value)
     return 1;
 }
 
-int pmem_multiqueue::update(pool_base &pop,uint64_t key,int level)
+int pmem_multiqueue::update(pool_base &pop,char* key,int level)
 {
     std::cout<<"update"<<std::endl;
     if(level == -1)
         return history2mq(pop,key);
     //热度提升
-    (*mq_hash)[key]->hot += READ_VALUE;
-    if(level + 1 != multi_num && (*mq_hash)[key]->hot >= HOT_LEVEL)
+    (*mq_hash)[key->data()]->hot += READ_VALUE;
+    if(level + 1 != multi_num && (*mq_hash)[key->data()]->hot >= HOT_LEVEL)
     {
         return levelup(pop,key,level);
     }
@@ -92,13 +92,13 @@ persistent_ptr<pmem_entry> pmem_multiqueue::pop(pool_base &pool)
     if(history_queue->queue_size == 0)
         return NULL;
     persistent_ptr<pmem_entry> temp = history_queue->pop(pool);
-    history_map->erase(temp->key);
-    delete((*mq_hash)[temp->key]);
-    mq_hash->erase(temp->key);
+    history_map->erase(temp->key->data());
+    delete((*mq_hash)[temp->key->data()]);
+    mq_hash->erase(temp->key->data());
     return temp;
 }
 
-int pmem_multiqueue::levelup(pool_base &pop,uint64_t key,int level)
+int pmem_multiqueue::levelup(pool_base &pop,char* key,int level)
 {
     std::cout<<"levelup"<<std::endl;
     if(level >= multi_num - 1)
@@ -108,11 +108,11 @@ int pmem_multiqueue::levelup(pool_base &pop,uint64_t key,int level)
     if(temp == NULL)
         return -1;
     op_queue = mq[level + 1];
-    (*mq_hash)[key]->level = level + 1;
-    (*mq_hash)[key]->hot = READ_VALUE;
+    (*mq_hash)[key->data()]->level = level + 1;
+    (*mq_hash)[key->data()]->hot = READ_VALUE;
     if(op_queue->isFull())
         mq2history(pop,level+1);
-    return op_queue->push(pop,(uint64_t)temp->key,temp->value->data());
+    return op_queue->push(pop,temp->key->data(),temp->value->data());
 }
 
 int pmem_multiqueue::mq2history(pool_base &pool,int level)
@@ -123,36 +123,36 @@ int pmem_multiqueue::mq2history(pool_base &pool,int level)
     {
         pop(pool);
     }
-    history_queue->push(pool,entry->key,entry->value->data());
-    (*mq_hash)[entry->key]->level = -1;
-    (*history_map)[entry->key] = level;
+    history_queue->push(pool,entry->key->data(),entry->value->data());
+    (*mq_hash)[entry->key->data()]->level = -1;
+    (*history_map)[entry->key->data()] = level;
     return 1;
 }
 
-int pmem_multiqueue::history2mq(pool_base &pop,uint64_t key)
+int pmem_multiqueue::history2mq(pool_base &pop,char* key)
 {
     std::cout<<"history2mq"<<std::endl;
     persistent_ptr<pmem_entry> temp = history_queue->del(key);
     if(temp == NULL)
         return -1;
-    int level = (*history_map)[temp->key];
-    (*history_map).erase(temp->key);
+    int level = (*history_map)[temp->key->data()];
+    (*history_map).erase(temp->key->data());
 
     //热度提升
-    (*mq_hash)[key]->hot += READ_VALUE;
-    if(level + 1 != multi_num &&(*mq_hash)[key]->hot >= HOT_LEVEL)
+    (*mq_hash)[key->data()]->hot += READ_VALUE;
+    if(level + 1 != multi_num &&(*mq_hash)[key->data()]->hot >= HOT_LEVEL)
     {
-        (*mq_hash)[key]->hot = READ_VALUE;
+        (*mq_hash)[key->data()]->hot = READ_VALUE;
         ++level;
     }
-    (*mq_hash)[key]->level = level;
+    (*mq_hash)[key->data()]->level = level;
     persistent_ptr<pmem_queue> op_queue = mq[level];
     if(op_queue->isFull())
         mq2history(pop,level);
-    return op_queue->push(pop,(uint64_t)temp->key,temp->value->data());
+    return op_queue->push(pop,temp->key->data(),temp->value->data());
 }
 
-persistent_ptr<pmem_entry> pmem_multiqueue::lookup(pool_base &pool,uint64_t key)
+persistent_ptr<pmem_entry> pmem_multiqueue::lookup(pool_base &pool,char* key)
 {
     int level = search_node(key);
     if(level == -2)
@@ -204,7 +204,7 @@ void pmem_multiqueue::print()
         temp = mq[i]->tail;
         while(temp &&temp != mq[i]->head)
         {
-            std::cout<<temp->key<<"("<<(*mq_hash)[temp->key]->hot<<","<<(*mq_hash)[temp->key]->level<<")"<<" ";
+            std::cout<<temp->key->data()<<"("<<(*mq_hash)[temp->key->data()]->hot<<","<<(*mq_hash)[temp->key->data()]->level<<")"<<" ";
             temp = temp->prev;
         }
         std::cout<<std::endl;
@@ -214,7 +214,7 @@ void pmem_multiqueue::print()
     temp = history_queue->tail;
     while(temp &&temp != history_queue->head)
     {
-        std::cout<<temp->key<<"("<<(*mq_hash)[temp->key]->hot<<","<<(*mq_hash)[temp->key]->level<<","<<(*history_map)[temp->key]<<")"<<" ";
+        std::cout<<temp->key->data()<<"("<<(*mq_hash)[temp->key->data()]->hot<<","<<(*mq_hash)[temp->key->data()]->level<<","<<(*history_map)[temp->key->data()]<<")"<<" ";
         temp = temp->prev;
     }
     std::cout<<"\n\n";

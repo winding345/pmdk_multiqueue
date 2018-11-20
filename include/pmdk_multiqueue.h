@@ -21,20 +21,19 @@ public:
 
     p<int> multi_num,queue_len,default_level;
 
-    std::map<uint64_t,int>* history_map;//记录history中数据对应的原来queue
-    std::map<uint64_t,block_info* >* mq_hash;
+    std::map<char*,int>* history_map;//记录history中数据对应的原来queue
+    std::map<char*,block_info* >* mq_hash;
 
     pmem_multiqueue(pool_base &pop,int multi_num,int queue_len,int default_level);
     int hash_recovery(pool_base &pop);
-    int search_node(uint64_t key);
-    int push(pool_base &pop,uint64_t key,char* value);
-    int update(pool_base &pop,uint64_t key,int level);
+    int search_node(char* key);
+    int push(pool_base &pop,char* key,char* value);
+    int update(pool_base &pop,char* key,int level);
     persistent_ptr<pmem_entry> pop(pool_base &pool);
-    int levelup(pool_base &pop,uint64_t key,int level);
-//    int leveldown(uint64_t key,int level);
+    int levelup(pool_base &pop,char* key,int level);
     int mq2history(pool_base &pop,int level);
-    int history2mq(pool_base &pop,uint64_t key);
-    persistent_ptr<pmem_entry> lookup(pool_base &pool,uint64_t key);
+    int history2mq(pool_base &pop,char* key);
+    persistent_ptr<pmem_entry> lookup(pool_base &pool,char* key);
     int do_decay(pool_base &pop);
     void print();
 };
