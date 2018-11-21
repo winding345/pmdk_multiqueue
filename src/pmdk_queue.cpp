@@ -100,7 +100,7 @@ persistent_ptr<pmem_entry> pmem_queue::pop(pool_base &pool)
     });
     return temp;
 }
-persistent_ptr<pmem_entry> pmem_queue::del(uint64_t key)
+persistent_ptr<pmem_entry> pmem_queue::del(char* key)
 {
     persistent_ptr<pmem_entry> temp = head->next;
     while(temp)
