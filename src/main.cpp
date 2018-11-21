@@ -55,7 +55,7 @@ int main(int argc,char *argv[])
     transaction::run(pop, [&]
     {
         if(r->mq == nullptr)
-            r->mq = make_persistent<pmem_multiqueue>(pop,4,15,1);
+            r->mq = make_persistent<pmem_multiqueue>(pop,4,2,1);
         else
         {
             r->mq->hash_recovery(pop);
@@ -65,8 +65,8 @@ int main(int argc,char *argv[])
     char itc[100];
     while(i--)
     {
-//        std::cin>>input;
-        input = randCreate::getCreater()->get(0,80);
+        std::cin>>input;
+//        input = randCreate::getCreater()->get(0,80);
         std::cout<<"input: "<<input<<std::endl;
         sprintf(itc,"%d",input);
         if(input == -1)
