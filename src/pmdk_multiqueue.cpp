@@ -54,7 +54,6 @@ int pmem_multiqueue::search_node(char* key)
 {
     if((*mq_hash).find(key) == (*mq_hash).end())
         return -2;
-        std::cout<<"search_it"<<std::endl;
     return (*mq_hash)[key]->level;
 }
 
