@@ -198,11 +198,11 @@ void pmem_multiqueue::print()
 {
     std::cout<<"print multi-queue"<<std::endl;
     persistent_ptr<pmem_entry> temp;
-    std::cout<<"print multi-queue"<<std::endl;
     for(int i = 0;i < multi_num;++i)
     {
         std::cout<<"print multi-queue"<<std::endl;
         std::cout<<"<"<<i<<"("<<mq[i]->queue_size<<")>"<<'\t';
+        std::cout<<"print multi-queue"<<std::endl;
         temp = mq[i]->tail;
         while(temp &&temp != mq[i]->head)
         {
