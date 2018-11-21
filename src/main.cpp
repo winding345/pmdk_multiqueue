@@ -122,8 +122,11 @@ int main(int argc,char *argv[])
     transaction::run(pop, [&]
     {
         if(r->mq == nullptr)
+        {
             r->mq = make_persistent<pmem_queue>();
             init(pop,4);
+
+        }
         else
         {
             ;//r->mq->hash_recovery(pop);
