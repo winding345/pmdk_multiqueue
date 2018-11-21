@@ -55,7 +55,7 @@ int main(int argc,char *argv[])
     transaction::run(pop, [&]
     {
         if(r->mq == nullptr)
-            r->mq = make_persistent<pmem_multiqueue>(pop,4,2,1);
+            r->mq = make_persistent<pmem_multiqueue>(pop,4,12,1);
         else
         {
             r->mq->hash_recovery(pop);
@@ -85,6 +85,8 @@ int main(int argc,char *argv[])
         sprintf(itc,"%d",input);
         if(input == -1)
             break;
+        if(input == -2)
+            r->mq->print();
         persistent_ptr<pmem_entry> entry = r->mq->lookup(pop,itc);
         if(entry == nullptr)
             std::cout<<"not found"<<endl;
