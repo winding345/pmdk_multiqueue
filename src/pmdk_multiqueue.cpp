@@ -79,8 +79,8 @@ int pmem_multiqueue::update(pool_base &pop,char* key,int level)
     if(level == -1)
         return history2mq(pop,key);
     //热度提升
-    (*mq_hash)[key->data()]->hot += READ_VALUE;
-    if(level + 1 != multi_num && (*mq_hash)[key->data()]->hot >= HOT_LEVEL)
+    (*mq_hash)[key]->hot += READ_VALUE;
+    if(level + 1 != multi_num && (*mq_hash)[key]->hot >= HOT_LEVEL)
     {
         return levelup(pop,key,level);
     }
@@ -108,8 +108,8 @@ int pmem_multiqueue::levelup(pool_base &pop,char* key,int level)
     if(temp == NULL)
         return -1;
     op_queue = mq[level + 1];
-    (*mq_hash)[key->data()]->level = level + 1;
-    (*mq_hash)[key->data()]->hot = READ_VALUE;
+    (*mq_hash)[key]->level = level + 1;
+    (*mq_hash)[key]->hot = READ_VALUE;
     if(op_queue->isFull())
         mq2history(pop,level+1);
     return op_queue->push(pop,temp->key->data(),temp->value->data());
@@ -139,13 +139,13 @@ int pmem_multiqueue::history2mq(pool_base &pop,char* key)
     (*history_map).erase(temp->key->data());
 
     //热度提升
-    (*mq_hash)[key->data()]->hot += READ_VALUE;
-    if(level + 1 != multi_num &&(*mq_hash)[key->data()]->hot >= HOT_LEVEL)
+    (*mq_hash)[key]->hot += READ_VALUE;
+    if(level + 1 != multi_num &&(*mq_hash)[key]->hot >= HOT_LEVEL)
     {
-        (*mq_hash)[key->data()]->hot = READ_VALUE;
+        (*mq_hash)[key]->hot = READ_VALUE;
         ++level;
     }
-    (*mq_hash)[key->data()]->level = level;
+    (*mq_hash)[key]->level = level;
     persistent_ptr<pmem_queue> op_queue = mq[level];
     if(op_queue->isFull())
         mq2history(pop,level);
