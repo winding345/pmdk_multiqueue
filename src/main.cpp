@@ -140,6 +140,6 @@ int main(int argc,char *argv[])
             break;
         else
             r->mq->push(pop,itc,itc);
-        r->mq->print();
+        r->mq->print(pop);
     }
 }
