@@ -206,7 +206,7 @@ void pmem_multiqueue::print()
         temp = mq[i]->tail;
         while(temp &&temp != mq[i]->head)
         {
-            //std::cout<<temp->key->data()<<"("<<(*mq_hash)[temp->key->data()]->hot<<","<<(*mq_hash)[temp->key->data()]->level<<")"<<" ";
+            std::cout<<temp->key->data()<<"("<<(*mq_hash)[temp->key->data()]->hot<<","<<(*mq_hash)[temp->key->data()]->level<<")"<<" ";
             temp = temp->prev;
         }
         std::cout<<std::endl;
