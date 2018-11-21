@@ -173,7 +173,7 @@ int pmem_multiqueue::do_decay(pool_base &pop)
         delete_persistent<pmem_queue>(temp);
         mq[multi_num-1] = make_persistent<pmem_queue>();
         mq[multi_num-1]->init(pop,queue_len);
-        std::map<uint64_t,block_info* >::iterator it;
+        std::map<char*,block_info* >::iterator it;
         for(it = mq_hash->begin();it!=mq_hash->end();)
         {
             if(it->second->level < 0)
