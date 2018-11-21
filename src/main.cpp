@@ -75,6 +75,7 @@ int main(int argc,char *argv[])
             r->mq->do_decay(pop);
         else
             r->mq->push(pop,itc,itc);
+        r->mq->print();
     }
     r->mq->print();
 
