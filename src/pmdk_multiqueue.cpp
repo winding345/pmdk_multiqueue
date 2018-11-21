@@ -200,7 +200,8 @@ void pmem_multiqueue::print()
     persistent_ptr<pmem_entry> temp;
     for(int i = 0;i < multi_num;++i)
     {
-        std::cout<<"<"<<i<<"("<<mq[i]->queue_size<<")>"<<'\t';
+        std::cout<<"<"<<i<<"(";
+        std::cout<<mq[i]->queue_size<<")>"<<'\t';
         temp = mq[i]->tail;
         while(temp &&temp != mq[i]->head)
         {
