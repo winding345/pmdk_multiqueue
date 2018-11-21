@@ -28,7 +28,7 @@ public:
     }
 };
 randCreate* randCreate::randCreater = NULL;
-
+/*
 int main(int argc,char *argv[])
 {
 
@@ -92,4 +92,54 @@ int main(int argc,char *argv[])
             std::cout<<entry->value->data()<<endl;
     }
     return 0;
+}
+*/
+
+
+int main(int argc,char *argv[])
+{
+
+//    ofstream file("out.txt");
+//    streambuf* strm_buffer = std::cout.rdbuf();
+//    std::cout.rdbuf(file.rdbuf());
+    const char *path = argv[1];
+    class rnode
+    {
+    public:
+        persistent_ptr<pmem_entry> mq = nullptr;
+    };
+
+    pool<rnode> pop;
+    if (file_exists(path) != 0)
+    {
+        pop = pool<rnode>::create(path, LAYOUT, PMEMOBJ_MIN_POOL, CREATE_MODE_RW);
+    }
+    else
+    {
+        pop = pool<rnode>::open(path, LAYOUT);
+    }
+    auto r = pop.root();
+    transaction::run(pop, [&]
+    {
+        if(r->mq == nullptr)
+            r->mq = make_persistent<pmem_entry>(pop,2);
+        else
+        {
+            ;//r->mq->hash_recovery(pop);
+        }
+    });
+    int i = 100,input = 0;
+    char itc[100];
+    while(i--)
+    {
+        std::cin>>input;
+//        input = randCreate::getCreater()->get(0,80);
+        std::cout<<"input: "<<input<<std::endl;
+        sprintf(itc,"%d",input);
+        if(input == -1)
+            break;
+        else
+            r->mq->push(pop,itc,itc);
+        r->mq->print();
+    }
 }
