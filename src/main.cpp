@@ -124,7 +124,7 @@ int main(int argc,char *argv[])
         if(r->mq == nullptr)
         {
             r->mq = make_persistent<pmem_queue>();
-            init(pop,4);
+            r->mq->init(pop,4);
 
         }
         else
