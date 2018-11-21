@@ -106,7 +106,7 @@ int main(int argc,char *argv[])
     class rnode
     {
     public:
-        persistent_ptr<pmem_entry> mq = nullptr;
+        persistent_ptr<pmem_queue> mq = nullptr;
     };
 
     pool<rnode> pop;
@@ -122,7 +122,7 @@ int main(int argc,char *argv[])
     transaction::run(pop, [&]
     {
         if(r->mq == nullptr)
-            r->mq = make_persistent<pmem_entry>(pop,2);
+            r->mq = make_persistent<pmem_queue>(pop,2);
         else
         {
             ;//r->mq->hash_recovery(pop);
