@@ -38,9 +38,9 @@ int pmem_queue::update_node(pool_base &pop,char* key)
 {
 //        transaction::run(pop, [&] {
     persistent_ptr<pmem_entry> temp = head->next;
-    std::cout<<tail->key->compare(key)<<std::endl;
-    std::cout<<tail->key->data()<<std::endl;
-    std::cout<<key<<std::endl;
+//    std::cout<<tail->key->compare(key)<<std::endl;
+//    std::cout<<tail->key->data()<<std::endl;
+//    std::cout<<key<<std::endl;
     if(tail->key->compare(key))
         return 1;
     while(temp)
