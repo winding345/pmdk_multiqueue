@@ -48,12 +48,12 @@ public:
 
     int compare(const std::string& right)
     {
-        return strcmp(&data_[0], right.c_str());
+        return !strcmp(&data_[0], right.c_str());
     }
 
     int compare(char* right)
     {
-        return strcmp(&data_[0], right);
+        return !strcmp(&data_[0], right);
     }
 
 
