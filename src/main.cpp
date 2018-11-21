@@ -65,8 +65,8 @@ int main(int argc,char *argv[])
     char itc[100];
     while(i--)
     {
-//        std::cin>>input;
-        input = randCreate::getCreater()->get(0,80);
+        std::cin>>input;
+//        input = randCreate::getCreater()->get(0,80);
         std::cout<<"input: "<<input<<std::endl;
         sprintf(itc,"%d",input);
         if(input == -1)
@@ -75,6 +75,7 @@ int main(int argc,char *argv[])
             r->mq->do_decay(pop);
         else
             r->mq->push(pop,itc,itc);
+        r->mq->print();
     }
     r->mq->print();
 
