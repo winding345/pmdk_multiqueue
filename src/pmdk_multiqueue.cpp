@@ -14,16 +14,16 @@ pmem_multiqueue::pmem_multiqueue(pool_base &pop,int multi_num,int queue_len,int 
         history_queue = make_persistent<pmem_queue>();
         history_queue->init(pop,queue_len);
     });
-    history_map = new std::map<char*,int>();
-    mq_hash = new std::map<char*,block_info*>();
+    history_map = new std::map<std::string,int>();
+    mq_hash = new std::map<std::string,block_info*>();
     std::cout<<history_queue->queue_size<<"size"<<std::endl;
 }
 
 int pmem_multiqueue::hash_recovery(pool_base &pop)
 {
     std::cout<<"hash_recovery"<<std::endl;
-    history_map = new std::map<char*,int>();
-    mq_hash = new std::map<char*,block_info*>();
+    history_map = new std::map<std::string,int>();
+    mq_hash = new std::map<std::string,block_info*>();
     //恢复过程中所有的热度均为1，history_map中的对应的原队列为0队列
     persistent_ptr<pmem_entry> temp;
     //遍历mq
@@ -70,6 +70,7 @@ int pmem_multiqueue::push(pool_base &pop,char* key,char* value)
 
     op_queue->push(pop,key,value);
     (*mq_hash)[key] = new block_info(READ_VALUE,default_level);
+
     return 1;
 }
 
@@ -173,7 +174,7 @@ int pmem_multiqueue::do_decay(pool_base &pop)
         delete_persistent<pmem_queue>(temp);
         mq[multi_num-1] = make_persistent<pmem_queue>();
         mq[multi_num-1]->init(pop,queue_len);
-        std::map<char*,block_info* >::iterator it;
+        std::map<std::string,block_info* >::iterator it;
         for(it = mq_hash->begin();it!=mq_hash->end();)
         {
             if(it->second->level < 0)
@@ -205,7 +206,7 @@ void pmem_multiqueue::print()
         temp = mq[i]->tail;
         while(temp &&temp != mq[i]->head)
         {
-            std::cout<<temp->key->data()<<"("<<(*mq_hash)[temp->key->data()]->hot<<","<<(*mq_hash)[temp->key->data()]->level<<")"<<" ";
+            //std::cout<<temp->key->data()<<"("<<(*mq_hash)[temp->key->data()]->hot<<","<<(*mq_hash)[temp->key->data()]->level<<")"<<" ";
             temp = temp->prev;
         }
         std::cout<<std::endl;

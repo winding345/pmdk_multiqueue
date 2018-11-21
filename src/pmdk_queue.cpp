@@ -18,7 +18,7 @@ int pmem_queue::init(pool_base &pop,int cap)
         }
 
     });
-    queue_hash = new std::map<char*,int>();
+    queue_hash = new std::map<std::string,int>();
     std::cout<<(*queue_hash).size()<<std::endl;
     queue_hash->clear();
     std::cout<<"init"<<std::endl;

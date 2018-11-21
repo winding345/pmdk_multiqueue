@@ -21,8 +21,8 @@ public:
 
     p<int> multi_num,queue_len,default_level;
 
-    std::map<char*,int>* history_map;//记录history中数据对应的原来queue
-    std::map<char*,block_info* >* mq_hash;
+    std::map<std::string,int>* history_map;//记录history中数据对应的原来queue
+    std::map<std::string,block_info* >* mq_hash;
 
     pmem_multiqueue(pool_base &pop,int multi_num,int queue_len,int default_level);
     int hash_recovery(pool_base &pop);

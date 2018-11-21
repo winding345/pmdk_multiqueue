@@ -76,7 +76,7 @@ public:
     p<int> capacity;
     p<int> queue_size;
     persistent_ptr<pmem_entry> head,tail;
-    std::map<char*,int>* queue_hash;
+    std::map<std::string,int>* queue_hash;
 
     ~pmem_queue();
     int init(pool_base &pop,int cap);
