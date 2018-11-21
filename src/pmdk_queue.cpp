@@ -38,11 +38,11 @@ int pmem_queue::update_node(pool_base &pop,char* key)
 {
 //        transaction::run(pop, [&] {
     persistent_ptr<pmem_entry> temp = head->next;
-    if(tail->key->data() == key)
+    if(tail->key->compare(key))
         return 1;
     while(temp)
     {
-        if(temp->key->data() == key)
+        if(temp->key->compare(key))
         {
             temp->prev->next = temp->next;
             if(temp->next)
@@ -105,7 +105,7 @@ persistent_ptr<pmem_entry> pmem_queue::del(char* key)
     persistent_ptr<pmem_entry> temp = head->next;
     while(temp)
     {
-        if(temp->key->data() == key)
+        if(temp->key->compare(key))
         {
             temp->prev->next = temp->next;
             if(temp->next)

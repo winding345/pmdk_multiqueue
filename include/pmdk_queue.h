@@ -51,6 +51,12 @@ public:
         return strcmp(&data_[0], right.c_str());
     }
 
+    int compare(char* right)
+    {
+        return strcmp(&data_[0], right);
+    }
+
+
     char* data()
     {
         return &data_[0];
