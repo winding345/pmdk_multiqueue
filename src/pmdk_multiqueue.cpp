@@ -1,6 +1,6 @@
 #include "pmdk_multiqueue.h"
 
-pmem_multiqueue::pmem_multiqueue(int multi_num,int queue_len,int default_level)
+pmem_multiqueue::pmem_multiqueue(pool_base &pop,int multi_num,int queue_len,int default_level)
 :multi_num(multi_num),queue_len(queue_len),default_level(default_level)
 {
     transaction::run(pop, [&]
@@ -219,4 +219,27 @@ void pmem_multiqueue::print()
         temp = temp->prev;
     }
     std::cout<<"\n\n";
+}
+
+
+MQ_Cache::MQ_Cache(char* path,size_t size,int multi_num,int queue_len,int default_level)
+{
+    if (file_exists(path) != 0)
+    {
+        aep_pool = pool<rnode>::create(path, LAYOUT, size, CREATE_MODE_RW);
+    }
+    else
+    {
+        aep_pool = pool<rnode>::open(path, LAYOUT);
+    }
+    root_node = aep_pool.root();
+    transaction::run(aep_pool, [&]
+    {
+        if(root_node->mq == nullptr)
+            root_node->mq = make_persistent<pmem_multiqueue>(aep_pool,multi_num,queue_len,default_level);
+        else
+        {
+            root_node->mq->hash_recovery(aep_pool);
+        }
+    });
 }
