@@ -37,6 +37,7 @@ int main(int argc,char *argv[])
 //    streambuf* strm_buffer = std::cout.rdbuf();
 //    std::cout.rdbuf(file.rdbuf());
     MQ_Cache mq = MQ_Cache(argv[1],PMEMOBJ_MIN_POOL,4,12,1);
+    std::cout<<PMEMOBJ_MIN_POOL<<std::endl;
     auto r = mq.root_node;
     int i = 100,input = 0;
     char itc[100];
