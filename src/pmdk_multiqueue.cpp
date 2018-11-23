@@ -226,7 +226,7 @@ MQ_Cache::MQ_Cache(char* path,size_t size,int multi_num,int queue_len,int defaul
 {
     if (file_exists(path) != 0)
     {
-        aep_pool = pool<rnode>::create(path, LAYOUT, size, CREATE_MODE_RW);
+        aep_pool = pool<rnode>::create(path, LAYOUT, size + PMEMOBJ_MIN_POOL, CREATE_MODE_RW);
     }
     else
     {
