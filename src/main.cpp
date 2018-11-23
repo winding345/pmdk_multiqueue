@@ -29,6 +29,29 @@ public:
 };
 randCreate* randCreate::randCreater = NULL;
 
+MQ_Cache::MQ_Cache(char* path,size_t size,int multi_num,int queue_len,int default_level)
+{
+    if (file_exists(path) != 0)
+    {
+        aep_pool = pool<rnode>::create(path, LAYOUT, size, CREATE_MODE_RW);
+    }
+    else
+    {
+        aep_pool = pool<rnode>::open(path, LAYOUT);
+    }
+    root_node = aep_pool.root();
+    transaction::run(aep_pool, [&]
+    {
+        if(root_node->mq == nullptr)
+            root_node->mq = make_persistent<pmem_multiqueue>(aep_pool,multi_num,queue_len,default_level);
+        else
+        {
+            root_node->mq->hash_recovery(aep_pool);
+        }
+    });
+}
+
+
 int main(int argc,char *argv[])
 {
 
@@ -36,31 +59,8 @@ int main(int argc,char *argv[])
 //    streambuf* strm_buffer = std::cout.rdbuf();
 //    std::cout.rdbuf(file.rdbuf());
     const char *path = argv[1];
-    class rnode
-    {
-    public:
-        persistent_ptr<pmem_multiqueue> mq = nullptr;
-    };
-
-    pool<rnode> pop;
-    if (file_exists(path) != 0)
-    {
-        pop = pool<rnode>::create(path, LAYOUT, PMEMOBJ_MIN_POOL, CREATE_MODE_RW);
-    }
-    else
-    {
-        pop = pool<rnode>::open(path, LAYOUT);
-    }
-    auto r = pop.root();
-    transaction::run(pop, [&]
-    {
-        if(r->mq == nullptr)
-            r->mq = make_persistent<pmem_multiqueue>(pop,4,12,1);
-        else
-        {
-            r->mq->hash_recovery(pop);
-        }
-    });
+    MQ_Cache mq = MQ_Cache(path,1024*1024,4,12,1);
+    auto r = mq->root_node;
     int i = 100,input = 0;
     char itc[100];
     while(i--)

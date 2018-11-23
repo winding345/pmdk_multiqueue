@@ -9,8 +9,8 @@ class block_info
 public:
     int hot;
     int level;
-    block_info(){}
-    block_info(int hot,int level):hot(hot),level(level){}
+    block_info() {}
+    block_info(int hot,int level):hot(hot),level(level) {}
 };
 
 class pmem_multiqueue
@@ -36,6 +36,20 @@ public:
     persistent_ptr<pmem_entry> lookup(pool_base &pool,char* key);
     int do_decay(pool_base &pop);
     void print();
+};
+
+class rnode
+{
+public:
+    persistent_ptr<pmem_multiqueue> mq = nullptr;
+};
+
+class MQ_Cache
+{
+public:
+    pool<rnode> aep_pool;
+    MQ_Cache(char* path,size_t size,int multi_num,int queue_len,int default_level);
+    rnode* root_node;
 };
 
 #endif // _PMDK_MULTI_QUEUE_

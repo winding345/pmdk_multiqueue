@@ -1,6 +1,6 @@
 #include "pmdk_multiqueue.h"
 
-pmem_multiqueue::pmem_multiqueue(pool_base &pop,int multi_num,int queue_len,int default_level)
+pmem_multiqueue::pmem_multiqueue(int multi_num,int queue_len,int default_level)
 :multi_num(multi_num),queue_len(queue_len),default_level(default_level)
 {
     transaction::run(pop, [&]
