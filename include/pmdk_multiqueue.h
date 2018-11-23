@@ -49,7 +49,7 @@ class MQ_Cache
 public:
     pool<rnode> aep_pool;
     MQ_Cache(char* path,size_t size,int multi_num,int queue_len,int default_level);
-    rnode* root_node;
+    persistent_ptr<rnode> root_node;
 };
 
 #endif // _PMDK_MULTI_QUEUE_

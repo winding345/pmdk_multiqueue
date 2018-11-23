@@ -58,8 +58,7 @@ int main(int argc,char *argv[])
 //    ofstream file("out.txt");
 //    streambuf* strm_buffer = std::cout.rdbuf();
 //    std::cout.rdbuf(file.rdbuf());
-    const char *path = argv[1];
-    MQ_Cache mq = MQ_Cache(path,1024*1024,4,12,1);
+    MQ_Cache mq = MQ_Cache(argv[1],1024*1024,4,12,1);
     auto r = mq->root_node;
     int i = 100,input = 0;
     char itc[100];
