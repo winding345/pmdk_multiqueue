@@ -59,7 +59,7 @@ int main(int argc,char *argv[])
 //    streambuf* strm_buffer = std::cout.rdbuf();
 //    std::cout.rdbuf(file.rdbuf());
     MQ_Cache mq = MQ_Cache(argv[1],1024*1024,4,12,1);
-    auto r = mq->root_node;
+    auto r = mq.root_node;
     int i = 100,input = 0;
     char itc[100];
     while(i--)
@@ -71,9 +71,9 @@ int main(int argc,char *argv[])
         if(input == -1)
             break;
         if(input == 0)
-            r->mq->do_decay(pop);
+            r->mq->do_decay(mq.aep_pool);
         else
-            r->mq->push(pop,itc,itc);
+            r->mq->push(mq.aep_pool,itc,itc);
 //        r->mq->print();
     }
     r->mq->print();
@@ -86,7 +86,7 @@ int main(int argc,char *argv[])
             break;
         if(input == -2)
             r->mq->print();
-        persistent_ptr<pmem_entry> entry = r->mq->lookup(pop,itc);
+        persistent_ptr<pmem_entry> entry = r->mq->lookup(mq.aep_pool,itc);
         if(entry == nullptr)
             std::cout<<"not found"<<endl;
         else
